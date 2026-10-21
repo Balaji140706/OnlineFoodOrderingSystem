@@ -174,7 +174,7 @@ export default function Delivery(){
                 <h3>Items for Order #{selectedOrderId}</h3>
                 {itemsLoading?<p>Loading order items...</p>:orderItems.length===0?<p>No items found for this order.</p>:<table className="Delivery_table">
                     <thead><tr><th>Item</th><th>Quantity</th><th>Unit Price</th><th>Subtotal</th></tr></thead>
-                    <tbody>{orderItems.map((item,index)=><tr key={index}><td>{item.name}</td><td>{item.quantity}</td><td>₹{Number(item.price).toFixed(2)}</td><td>₹{(Number(item.price)*Number(item.quantity)).toFixed(2)}</td></tr>)}</tbody>
+                    <tbody>{orderItems.map((item,index)=><tr key={index}><td>{item.name}</td><td>{item.quantity}</td><td>₹{Number(item.unitprice).toFixed(2)}</td><td>₹{(Number(item.unitprice)*Number(item.quantity)).toFixed(2)}</td></tr>)}</tbody>
                 </table>}
             </div>}
         </div>

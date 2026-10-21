@@ -26,7 +26,8 @@ export default function Login() {
             );
 
             const data = await response.json();
-
+            console.log("Server role:", data.role);
+            console.log("Selected role:", roleRef.current.value);
             if (response.ok) {
                 alert("Account created successfully!");
                 console.log(data);
@@ -40,6 +41,10 @@ export default function Login() {
         }
     };
     const loginClick = async () => {
+        if (!roleRef.current.value) {
+            alert("Please select a role!");
+            return;
+        }
         try {
             const response = await fetch(
                 "http://localhost:5299/api/auth/Login",
@@ -65,18 +70,20 @@ export default function Login() {
                     accessToken: data.accessToken,
                     refreshToken: data.refreshToken
                 };
-
                 if (data.role === "admin") {
                     navigate("/Admin", { state: tokens });
                 }
-                else if (roleRef.current.value === "customer") {
+                else if (data.role === "customer") {
                     navigate("/Customer", { state: tokens });
                 }
-                else if (roleRef.current.value === "restaurant") {
+                else if (data.role === "restaurant") {
                     navigate("/Restaurant", { state: tokens });
                 }
-                else {
+                else if (data.role === "delivery") {
                     navigate("/Delivery", { state: tokens });
+                }
+                else {
+                    alert("Invalid role returned by server!");
                 }
             }
             else {
@@ -124,11 +131,13 @@ export default function Login() {
                 <select 
                     id="role" 
                     ref={roleRef}
+                    defaultValue=""
                 >
                     <option value="" disabled>--Select an option--</option>
                     <option value="customer">customer</option>
                     <option value="restaurant">restaurant</option>
                     <option value="delivery">delivery</option>
+                    <option value="admin">admin</option>
                 </select>
             </div>
             <button

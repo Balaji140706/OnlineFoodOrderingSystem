@@ -149,39 +149,182 @@ export async function CancelOrderController(req,res){
     }
 }
 
-export function SubmitRestaurantReviewController(req,res){
-    const {id}=req.user;
-    const {orderid,rating,review=""}=req.body;
-    if(!Number.isInteger(rating) || rating<1 || rating>5) return res.status(400).json({message:"Invalid rating!"});
+export async function SubmitRestaurantReviewController(req, res) {
+    const { id } = req.user;
+    const { orderid, rating, review = "" } = req.body;
 
-    db.query('insert into restaurantreviews (orderid,rating,review) select id,?,? from orders where id=? and customerid=? and status="fulfilled"',[rating,review,orderid,id],(err,result)=>{
-        if(err){
-            if(err.code==="ER_DUP_ENTRY") return res.status(409).json({message:"Restaurant already reviewed!"});
-            return res.status(500).json({message:"Could not submit restaurant review!"});
+    if (!Number.isInteger(rating) || rating < 1 || rating > 5) {
+        return res.status(400).json({ message: "Invalid rating!" });
+    }
+
+    let conn;
+
+    try {
+        conn = await db.promise().getConnection();
+        await conn.beginTransaction();
+
+        const [orders] = await conn.query(
+            `SELECT restaurantid, restaurantrating, status
+             FROM orders
+             WHERE id = ? AND customerid = ?
+             FOR UPDATE`,
+            [orderid, id]
+        );
+
+        if (!orders.length || orders[0].status !== "fulfilled") {
+            await conn.rollback();
+            return res.status(403).json({
+                message: "Order is not eligible for review!"
+            });
         }
-        if(!result.affectedRows) return res.status(403).json({message:"Order is not eligible for review!"});
-        return res.status(201).json({message:"Restaurant review submitted!"});
-    });
+
+        if (orders[0].restaurantrating !== null) {
+            await conn.rollback();
+            return res.status(409).json({
+                message: "Restaurant already reviewed!"
+            });
+        }
+
+        const restaurantid = orders[0].restaurantid;
+
+        await conn.query(
+            `UPDATE orders
+             SET restaurantrating = ?, restaurantreview = ?
+             WHERE id = ?`,
+            [rating, review, orderid]
+        );
+
+        await conn.query(
+            `UPDATE restaurant
+             SET rating = (
+                 SELECT AVG(restaurantrating)
+                 FROM orders
+                 WHERE restaurantid = ?
+                   AND restaurantrating IS NOT NULL
+             )
+             WHERE id = ?`,
+            [restaurantid, restaurantid]
+        );
+
+        await conn.commit();
+
+        return res.status(201).json({
+            message: "Restaurant review submitted!"
+        });
+
+    } catch (err) {
+        console.error("Restaurant review error:", err);
+
+        if (conn) await conn.rollback().catch(console.error);
+
+        return res.status(500).json({
+            message: "Could not submit restaurant review!"
+        });
+
+    } finally {
+        if (conn) conn.release();
+    }
 }
-export function SubmitDeliveryReviewController(req,res){
-    const {id}=req.user;
-    const {orderid,rating,review=""}=req.body;
-    if(!Number.isInteger(rating) || rating<1 || rating>5) return res.status(400).json({message:"Invalid rating!"});
+export async function SubmitDeliveryReviewController(req, res) {
+    const { id } = req.user;
+    const { orderid, rating, review = "" } = req.body;
 
-    db.query('insert into deliveryreviews (orderid,rating,review) select id,?,? from orders where id=? and customerid=? and status="fulfilled"',[rating,review,orderid,id],(err,result)=>{
-        if(err){
-            if(err.code==="ER_DUP_ENTRY") return res.status(409).json({message:"Delivery partner already reviewed!"});
-            return res.status(500).json({message:"Could not submit delivery review!"});
+    if (!Number.isInteger(rating) || rating < 1 || rating > 5) {
+        return res.status(400).json({ message: "Invalid rating!" });
+    }
+
+    let conn;
+
+    try {
+        conn = await db.promise().getConnection();
+        await conn.beginTransaction();
+
+        const [orders] = await conn.query(
+            `SELECT deliverypersonid, deliverypersonrating, status
+             FROM orders
+             WHERE id = ? AND customerid = ?
+             FOR UPDATE`,
+            [orderid, id]
+        );
+
+        if (!orders.length || orders[0].status !== "fulfilled") {
+            await conn.rollback();
+            return res.status(403).json({
+                message: "Order is not eligible for review!"
+            });
         }
-        if(!result.affectedRows) return res.status(403).json({message:"Order is not eligible for review!"});
-        return res.status(201).json({message:"Delivery review submitted!"});
-    });
+
+        if (orders[0].deliverypersonrating !== null) {
+            await conn.rollback();
+            return res.status(409).json({
+                message: "Delivery partner already reviewed!"
+            });
+        }
+
+        const deliverypersonid = orders[0].deliverypersonid;
+
+        if (deliverypersonid === null) {
+            await conn.rollback();
+            return res.status(409).json({
+                message: "No delivery partner assigned!"
+            });
+        }
+
+        await conn.query(
+            `UPDATE orders
+             SET deliverypersonrating = ?, deliverypersonreview = ?
+             WHERE id = ?`,
+            [rating, review, orderid]
+        );
+
+        await conn.query(
+            `UPDATE delivery
+             SET rating = (
+                 SELECT AVG(deliverypersonrating)
+                 FROM orders
+                 WHERE deliverypersonid = ?
+                   AND deliverypersonrating IS NOT NULL
+             )
+             WHERE id = ?`,
+            [deliverypersonid, deliverypersonid]
+        );
+
+        await conn.commit();
+
+        return res.status(201).json({
+            message: "Delivery review submitted!"
+        });
+
+    } catch (err) {
+        console.error("Delivery review error:", err);
+
+        if (conn) await conn.rollback().catch(console.error);
+
+        return res.status(500).json({
+            message: "Could not submit delivery review!"
+        });
+
+    } finally {
+        if (conn) conn.release();
+    }
 }
 export function GetOrderReviewsController(req,res){
     const {id}=req.user;
     const {orderid}=req.body;
-    db.query('select rr.rating as restaurantrating,rr.review as restaurantreview,dr.rating as deliveryrating,dr.review as deliveryreview from orders o left join restaurantreviews rr on rr.orderid=o.id left join deliveryreviews dr on dr.orderid=o.id where o.id=? and o.customerid=?',[orderid,id],(err,rows)=>{
-        if(err) return res.status(500).json({message:"Could not fetch reviews!"});
+    const sql = `
+    SELECT
+        o.restaurantrating,
+        o.restaurantreview,
+        o.deliverypersonrating AS deliveryrating,
+        o.deliverypersonreview AS deliveryreview
+    FROM orders o
+    WHERE o.id = ? AND o.customerid = ?
+`;
+    db.query(sql,[orderid,id],(err,rows)=>{
+        if(err){
+            console.log(err);
+            return res.status(500).json({message:"Could not fetch reviews!"});
+        }
         if(!rows.length) return res.status(404).json({message:"Order not found!"});
         return res.status(200).json(rows[0]);
     });

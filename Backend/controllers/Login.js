@@ -268,7 +268,8 @@ export function LoginController(req, res) {
                         return res.status(200).json({
                             message: "Successfully logged in!",
                             accessToken,
-                            refreshToken
+                            refreshToken,
+                            role
                         });
                     });
                 }
