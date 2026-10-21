@@ -1,0 +1,259 @@
+
+#Customer_div {
+    max-width: 1000px;
+    margin: 40px auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+}
+
+#Customer_heading {
+    font-size: 40px;
+    text-align: center;
+}
+
+.Customer_section {
+    border: 2px solid black;
+    padding: 25px;
+    margin-top: 30px;
+    border-radius: 2px;
+}
+
+.Customer_section h2 {
+    font-size: 28px;
+    margin-bottom: 25px;
+}
+
+.Customer_section h3 {
+    font-size: 22px;
+    margin: 0 0 8px;
+}
+
+.Customer_section p {
+    font-size: 18px;
+}
+
+/* CUSTOMER DETAILS */
+
+.Customer_field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.Customer_field label {
+    font-size: 20px;
+}
+
+.Customer_field input,
+.Customer_field textarea {
+    width: 100%;
+    max-width: 500px;
+    box-sizing: border-box;
+    padding: 8px;
+    font-size: 18px;
+    border: 2px solid black;
+    border-radius: 2px;
+    background-color: white;
+}
+
+.Customer_field input {
+    height: 40px;
+}
+
+.Customer_field textarea {
+    min-height: 80px;
+    resize: vertical;
+}
+
+.Customer_field input:disabled,
+.Customer_field textarea:disabled {
+    background-color: #f2f2f2;
+    color: black;
+    opacity: 1;
+}
+
+.Customer_actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+/* INPUTS */
+
+.Customer_section label {
+    display: block;
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.Customer_input {
+    width: 100%;
+    max-width: 500px;
+    height: 40px;
+    box-sizing: border-box;
+    padding: 5px 10px;
+    font-size: 18px;
+    border: 2px solid black;
+    border-radius: 2px;
+    background-color: white;
+}
+
+/* BUTTONS */
+
+.Customer_button,
+.Customer_smallButton,
+#Customer_placeOrder {
+    width: fit-content;
+    padding: 6px 12px;
+    font-size: 20px;
+    border: 2px solid black;
+    background-color: white;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: transform 0.15s;
+}
+
+.Customer_button:hover,
+.Customer_smallButton:hover,
+#Customer_placeOrder:hover:not(:disabled) {
+    transform: scale(1.08);
+}
+
+.Customer_button:active,
+.Customer_smallButton:active,
+#Customer_placeOrder:active:not(:disabled) {
+    transform: scale(0.92);
+}
+
+/* RESTAURANTS AND MENU */
+
+.Customer_restaurantList,
+.Customer_menuList {
+    margin-top: 20px;
+}
+
+.Customer_restaurant,
+.Customer_menuItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    border: 2px solid black;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 2px;
+}
+
+.Customer_restaurant p,
+.Customer_menuItem p {
+    margin: 5px 0;
+}
+
+/* TABLES */
+
+.Customer_tableWrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.Customer_table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 18px;
+}
+
+.Customer_table th,
+.Customer_table td {
+    border: 2px solid black;
+    padding: 12px;
+    text-align: left;
+}
+
+/* CART */
+
+.Customer_quantity {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.Customer_quantity button {
+    width: 35px;
+    height: 35px;
+    font-size: 22px;
+    border: 2px solid black;
+    background-color: white;
+    cursor: pointer;
+}
+
+.Customer_quantity button:hover {
+    background-color: #eeeeee;
+}
+
+.Customer_smallButton {
+    font-size: 15px;
+}
+
+.Customer_total {
+    text-align: right;
+    margin-top: 25px;
+}
+
+/* PAYMENT */
+
+.Customer_payment {
+    margin-top: 30px;
+}
+
+/* PLACE ORDER */
+
+#Customer_placeOrder {
+    margin-top: 30px;
+    font-size: 30px;
+}
+
+#Customer_placeOrder:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* MOBILE RESPONSIVENESS */
+
+@media (max-width: 600px) {
+    #Customer_div {
+        margin: 15px auto;
+        padding: 12px;
+    }
+
+    #Customer_heading {
+        font-size: 30px;
+    }
+
+    .Customer_section {
+        padding: 15px;
+    }
+
+    .Customer_restaurant,
+    .Customer_menuItem {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .Customer_button {
+        font-size: 18px;
+    }
+
+    .Customer_table {
+        font-size: 14px;
+    }
+
+    .Customer_table th,
+    .Customer_table td {
+        padding: 8px;
+    }
+
+    #Customer_placeOrder {
+        font-size: 24px;
+    }
+}

@@ -1,0 +1,80 @@
+#Login_div{
+    display: grid;
+    place-items: center;
+    gap:20px
+}
+#heading{
+    font-size:50px;
+    padding-left: 20px;
+    padding-right:20px;
+    margin: 50px;
+    border: 2px solid black;
+    border-radius: 2px;
+}
+#username_combo{
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+#password_combo{
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+#role_combo{
+    display: flex;
+    flex-direction: row;
+    gap: 40px;
+}
+#Login_label_username{
+    font-size: larger;
+}
+#username{
+    width: 250px;
+    height:30px;
+    font-size:18px;
+}
+#Login_label_password{
+    font-size:larger;
+}
+#Login_label_role{
+    font-size:larger;
+}
+#password{
+    width: 250px;
+    height:30px;
+    font-size:18px;
+}
+#role{
+    width: 250px;
+    height:30px;
+    font-size:18px;
+}
+#login{
+    margin-top:40px;
+    width:fit-content;
+    font-size:35px;
+    border:2px solid black;
+    background-color: white;
+    border-radius: 2px;
+}
+#login:hover{
+    transform: scale(110%,110%);
+}
+#login:active{
+    transform: scale(90%,90%);
+}
+#createAccount{
+    margin-top:40px;
+    width:fit-content;
+    font-size:35px;
+    border:2px solid black;
+    background-color: white;
+    border-radius: 2px;
+}
+#createAccount:hover{
+    transform: scale(110%,110%);
+}
+#createAccount:active{
+    transform: scale(90%,90%);
+}

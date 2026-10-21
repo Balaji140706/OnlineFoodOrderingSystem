@@ -1,0 +1,10 @@
+import express from 'express';
+import authenticate from '../middleware/authenticate.js';
+import promptSqlPrep from '../middleware/promptToSQL.js';
+import SQLToTextPrep from '../middleware/SQLToText.js';
+import { RunQueryController,SendPromptController } from '../controllers/Admin.js';
+const router=express.Router();
+router.post('/RunQuery',authenticate(["admin"]),RunQueryController);
+router.post('/PromptToSQL',authenticate(["admin"]),promptSqlPrep,SendPromptController);
+router.post('/SQLToText',authenticate(["admin"]),SQLToTextPrep,SendPromptController);
+export default router;

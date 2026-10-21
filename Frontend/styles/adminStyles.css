@@ -1,0 +1,91 @@
+#fullContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 75px;
+    align-items: center;
+}
+
+#promptSender {
+    margin-top:50px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap:200px
+}
+
+#promptArea {
+    width: 550px;
+    height: 150px;
+    font-size: 16px;
+    margin: 20px;
+    resize: vertical;
+    border: 2px solid black;
+    
+}
+
+#injectDiv {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid black;
+    width: 500px;
+    height: 190px;
+}
+
+#heading {
+    margin: 0 0 20px 0;
+}
+
+#injectButton {
+    width: 100px;
+    height: 35px;
+    background-color: white;
+    border:2px solid black;
+}
+#injectButton:hover{
+    transform: scale(110%,110%);
+}
+#injectButton:active{
+    transform: scale(90%,90%);
+    opacity: 70%;
+}
+#response{
+    width:1000px;
+    height:300px;
+    border: 2px solid black;
+}
+#downloadResponse{
+    height:40px;
+    font-size: 20px;
+    background-color: white;
+    border:2px solid black;
+}
+#downloadResponse:hover{
+    transform: scale(120%,120%);
+}
+#downloadResponse:active{
+    transform: scale(90%,90%);
+    opacity: 70%;
+}
+#response {
+    padding: 15px;
+    box-sizing: border-box;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+#logout{
+    height:40px;
+    font-size: 20px;
+    background-color: white;
+    border:2px solid black;
+}
+#logout:hover{
+    transform: scale(120%,120%);
+}
+#logout:active{
+    transform: scale(90%,90%);
+    opacity: 70%;
+}
